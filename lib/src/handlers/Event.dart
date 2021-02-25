@@ -5,6 +5,7 @@ class Event {
   String dateTime;
   Function onTap;
   Function onLongPress;
+  Widget flag;
 
   Event({
     title,
@@ -12,6 +13,7 @@ class Event {
     dateTime,
     onTap(int listIndex),
     onLongPress,
+    flag
   }) {
     this.title = title ?? '';
     this.description = description ?? '';
@@ -24,5 +26,6 @@ class Event {
         (int listIndex) {
           print('LongPress ' + listIndex.toString());
         };
+    this.flag = flag ?? '';
   }
 }
