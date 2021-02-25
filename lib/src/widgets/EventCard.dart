@@ -21,7 +21,7 @@ class EventCard extends StatelessWidget {
         child: Card(
           color: EventCalendar.eventBackgroundColor,
           child: Container(
-            padding: EdgeInsets.all(20),
+            padding: EdgeInsets.all(5),
             child: Column(
               crossAxisAlignment: EventCalendar.isRTL
                   ? CrossAxisAlignment.end
