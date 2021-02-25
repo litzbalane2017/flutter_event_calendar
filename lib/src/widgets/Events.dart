@@ -71,7 +71,7 @@ class Events extends StatelessWidget {
         children: [
           Icon(
             EventCalendar.emptyIcon,
-            size: 95,
+            size: 45,
             color: EventCalendar.emptyIconColor,
           ),
           Text(
@@ -79,7 +79,7 @@ class Events extends StatelessWidget {
             style: TextStyle(
               fontWeight: FontWeight.w500,
               fontSize: 20,
-              color: EventCalendar.eventTitleColor,
+              color: EventCalendar.emptyTextColor,
               fontFamily: EventCalendar.font,
             ),
           ),
