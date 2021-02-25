@@ -30,7 +30,7 @@ class Calendar extends StatelessWidget {
     return Container(
       height: 130,
       child: Padding(
-        padding: EdgeInsets.only(top: 20, bottom: 10),
+        padding: EdgeInsets.only(top: 20),
         child: Stack(
           children: [
             Row(
