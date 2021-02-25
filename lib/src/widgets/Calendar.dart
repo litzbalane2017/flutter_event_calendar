@@ -28,9 +28,9 @@ class Calendar extends StatelessWidget {
 
     // Yearly , Monthly , Weekly and Daily calendar
     return Container(
-      height: 130,
+      height: 100,
       child: Padding(
-        padding: EdgeInsets.only(top: 20),
+        padding: EdgeInsets.only(top: 10),
         child: Stack(
           children: [
             Row(
