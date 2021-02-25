@@ -50,36 +50,14 @@ class Calendar extends StatelessWidget {
               child: IgnorePointer(
                 child: Container(
                   width: 70,
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.centerLeft,
-                      end: Alignment.centerRight,
-                      colors: [
-                        const Color(0xffffffff),
-                        const Color(0x0affffff)
-                      ],
-                      tileMode: TileMode.clamp,
-                    ),
-                  ),
                 ),
               ),
             ),
             Align(
-              alignment: Alignment.centerRight,
+              alignment: Alignment.centerLeft,
               child: IgnorePointer(
                 child: Container(
                   width: 70,
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.centerRight,
-                      end: Alignment.centerLeft,
-                      colors: [
-                        const Color(0xffffffff),
-                        const Color(0x0affffff)
-                      ],
-                      tileMode: TileMode.clamp,
-                    ),
-                  ),
                 ),
               ),
             ),
