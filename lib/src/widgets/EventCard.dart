@@ -29,16 +29,18 @@ class EventCard extends StatelessWidget {
               children: [
                 Row(
                   children: [
-                    Text(
-                      '${fullCalendarEvent.title}',
-                      textDirection: EventCalendar.isRTL
-                          ? TextDirection.rtl
-                          : TextDirection.ltr,
-                      style: TextStyle(
-                        fontWeight: FontWeight.w500,
-                        fontSize: 20,
-                        color: EventCalendar.eventTitleColor,
-                        fontFamily: EventCalendar.font,
+                    Expanded(
+                      child: Text(
+                          '${fullCalendarEvent.title}',
+                          textDirection: EventCalendar.isRTL
+                              ? TextDirection.rtl
+                              : TextDirection.ltr,
+                          style: TextStyle(
+                            fontWeight: FontWeight.w500,
+                            fontSize: 20,
+                            color: EventCalendar.eventTitleColor,
+                            fontFamily: EventCalendar.font,
+                          ),
                       ),
                     ),
                     Container(
