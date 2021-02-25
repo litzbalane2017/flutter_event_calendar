@@ -69,9 +69,6 @@ class Events extends StatelessWidget {
     if (selectedEvents.length == 0)
       eventCards.add(Column(
         children: [
-          SizedBox(
-            height: 150,
-          ),
           Icon(
             EventCalendar.emptyIcon,
             size: 95,
@@ -80,8 +77,9 @@ class Events extends StatelessWidget {
           Text(
             '${EventCalendar.emptyText != null ? EventCalendar.emptyText : Translator().trans('empty')}',
             style: TextStyle(
-              color: EventCalendar.emptyTextColor,
-              fontSize: 25,
+              fontWeight: FontWeight.w500,
+              fontSize: 20,
+              color: EventCalendar.eventTitleColor,
               fontFamily: EventCalendar.font,
             ),
           ),
