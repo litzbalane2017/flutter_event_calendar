@@ -103,7 +103,6 @@ class _EventCalendarState extends State<EventCalendar> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Container(
-        color: Colors.white,
         child: Column(
           children: [
             Header(
