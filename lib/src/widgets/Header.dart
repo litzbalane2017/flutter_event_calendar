@@ -24,13 +24,14 @@ class Header extends StatelessWidget {
           children: [
             InkWell(
               onTap: () {
-                CalendarSelector().nextMonth();
+                CalendarSelector().previousDay();
                 onHeaderChanged.call();
               },
               child: Padding(
                 padding: EdgeInsets.only(left: 10),
                 child: Icon(
                   Icons.arrow_back_ios,
+                  color: Colors.white,
                   size: 18,
                 ),
               ),
@@ -39,45 +40,11 @@ class Header extends StatelessWidget {
               textDirection:
                   EventCalendar.isRTL ? TextDirection.rtl : TextDirection.ltr,
               children: [
-                GestureDetector(
-                  onTap: () {
-                    showModalBottomSheet(
-                      backgroundColor: Colors.transparent,
-                      context: context,
-                      builder: (BuildContext context) {
-                        return SelectMonth(
-                          onHeaderChanged: onHeaderChanged,
-                        );
-                      },
-                    );
-                  },
-                  child: Container(
-                    child: Text(
-                      '${CalendarSelector().getPart(format: 'month', responseType: 'string')}',
-                      style: TextStyle(
-                        fontWeight: FontWeight.w500,
-                        fontSize: 20,
-                        fontFamily: EventCalendar.font,
-                      ),
-                    ),
-                  ),
-                ),
-                Text(' , '),
-                GestureDetector(
-                  onTap: () {
-                    showModalBottomSheet(
-                      backgroundColor: Colors.transparent,
-                      context: context,
-                      builder: (BuildContext context) {
-                        return SelectYear(
-                          onHeaderChanged: onHeaderChanged,
-                        );
-                      },
-                    );
-                  },
+                Container(
                   child: Text(
-                    '${CalendarSelector().getPart(format: 'year', responseType: 'int')}',
+                    '${CalendarSelector().getPart(format: 'month', responseType: 'string')}',
                     style: TextStyle(
+                      color: Colors.white,
                       fontWeight: FontWeight.w500,
                       fontSize: 20,
                       fontFamily: EventCalendar.font,
@@ -88,13 +55,14 @@ class Header extends StatelessWidget {
             ),
             InkWell(
               onTap: () {
-                CalendarSelector().previousMonth();
+                CalendarSelector().nextDay();
                 onHeaderChanged.call();
               },
               child: Padding(
                 padding: EdgeInsets.only(right: 10),
                 child: Icon(
                   Icons.arrow_forward_ios,
+                  color: Colors.white,
                   size: 18,
                 ),
               ),
