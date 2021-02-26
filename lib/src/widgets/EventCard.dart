@@ -66,7 +66,7 @@ class EventCard extends StatelessWidget {
                   height: 8,
                 ),
                 Text(
-                  '${fullCalendarEvent.dateTime}',
+                  '${fullCalendarEvent.dateTime.substring(11,16)}',
                   style: TextStyle(
                     fontSize: 12,
                     color: EventCalendar.eventDateTimeColor,
