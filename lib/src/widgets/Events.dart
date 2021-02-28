@@ -7,12 +7,19 @@ import 'package:flutter_event_calendar/src/handlers/Translator.dart';
 import 'package:flutter_event_calendar/src/widgets/EventCard.dart';
 
 class Events extends StatelessWidget {
+  int _currentMonth = int.parse(DateTime.now().month.toString());
+  int _lowerLimit = int.parse(DateTime.now().subtract(Duration(days: 2)).day.toString());
+  int _higherLimit = int.parse(DateTime.now().add(Duration(days: 6)).day.toString());
+  int _selectedDay = int.parse(EventCalendar.dateTime.split(" ")[0].toString().substring(8));
+  int _selectedMonth = int.parse(EventCalendar.dateTime.split(" ")[0].toString().substring(5, 7));
+
   Function onEventsChanged;
 
   Events({this.onEventsChanged});
 
   @override
   Widget build(BuildContext context) {
+
     return Expanded(
       child: Padding(
         padding: EdgeInsets.all(5),
@@ -24,24 +31,26 @@ class Events extends StatelessWidget {
             clearVc = clearVc.toString().replaceAll(')', '');
             clearVc = clearVc.toString().replaceAll('Velocity', '');
             if (double.parse(clearVc.toString().split(',')[0]) > 0) {
-              // left
               switch (EventCalendar.isRTL) {
                 case true:
                   CalendarSelector().nextDay();
                   break;
                 case false:
-                  CalendarSelector().previousDay();
+                  if (_lowerLimit < _selectedDay || _selectedMonth > _currentMonth) CalendarSelector().previousDay();
                   break;
               }
               onEventsChanged.call();
             } else {
-              // right
               switch (EventCalendar.isRTL) {
                 case true:
                   CalendarSelector().previousDay();
                   break;
                 case false:
-                  CalendarSelector().nextDay();
+                  if (_higherLimit > _selectedDay) {
+                    CalendarSelector().nextDay();
+                  } else if (_selectedMonth <= _currentMonth) {
+                    CalendarSelector().nextDay();
+                  }
                   break;
               }
               onEventsChanged.call();
@@ -77,9 +86,8 @@ class Events extends StatelessWidget {
           Text(
             '${EventCalendar.emptyText != null ? EventCalendar.emptyText : Translator().trans('empty')}',
             style: TextStyle(
-              fontWeight: FontWeight.w500,
-              fontSize: 20,
               color: EventCalendar.emptyTextColor,
+              fontSize: 20,
               fontFamily: EventCalendar.font,
             ),
           ),
