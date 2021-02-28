@@ -5,7 +5,7 @@ import 'package:flutter_event_calendar/src/handlers/EventCalendar.dart';
 
 class Header extends StatelessWidget {
   int _currentMonth = int.parse(DateTime.now().month.toString());
-  int _lowerLimit = int.parse(DateTime.now().subtract(Duration(days: 2)).day.toString());
+  int _lowerLimit = int.parse(DateTime.now().subtract(Duration(days: 5)).day.toString());
   int _higherLimit = int.parse(DateTime.now().add(Duration(days: 6)).day.toString());
   int _selectedDay = int.parse(EventCalendar.dateTime.split(" ")[0].toString().substring(8));
   int _selectedMonth = int.parse(EventCalendar.dateTime.split(" ")[0].toString().substring(5, 7));
