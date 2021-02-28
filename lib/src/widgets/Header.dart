@@ -2,10 +2,14 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_event_calendar/src/handlers/CalendarSelector.dart';
 import 'package:flutter_event_calendar/src/handlers/EventCalendar.dart';
-import 'package:flutter_event_calendar/src/widgets/SelectMonth.dart';
-import 'package:flutter_event_calendar/src/widgets/SelectYear.dart';
 
 class Header extends StatelessWidget {
+  int _currentMonth = int.parse(DateTime.now().month.toString());
+  int _lowerLimit = int.parse(DateTime.now().subtract(Duration(days: 2)).day.toString());
+  int _higherLimit = int.parse(DateTime.now().add(Duration(days: 6)).day.toString());
+  int _selectedDay = int.parse(EventCalendar.dateTime.split(" ")[0].toString().substring(8));
+  int _selectedMonth = int.parse(EventCalendar.dateTime.split(" ")[0].toString().substring(5, 7));
+
   Function onHeaderChanged;
 
   Header({this.onHeaderChanged});
@@ -20,9 +24,9 @@ class Header extends StatelessWidget {
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          // Title , next and previous button
           children: [
-            InkWell(
+            _lowerLimit < _selectedDay || _selectedMonth > _currentMonth
+                ? InkWell(
               onTap: () {
                 CalendarSelector().previousDay();
                 onHeaderChanged.call();
@@ -35,10 +39,10 @@ class Header extends StatelessWidget {
                   size: 18,
                 ),
               ),
-            ),
+            )
+                : Container(),
             Row(
-              textDirection:
-                  EventCalendar.isRTL ? TextDirection.rtl : TextDirection.ltr,
+              textDirection: EventCalendar.isRTL ? TextDirection.rtl : TextDirection.ltr,
               children: [
                 Container(
                   child: Text(
@@ -53,7 +57,8 @@ class Header extends StatelessWidget {
                 ),
               ],
             ),
-            InkWell(
+            _higherLimit > _selectedDay
+                ? InkWell(
               onTap: () {
                 CalendarSelector().nextDay();
                 onHeaderChanged.call();
@@ -66,7 +71,23 @@ class Header extends StatelessWidget {
                   size: 18,
                 ),
               ),
-            ),
+            )
+                : _selectedMonth <= _currentMonth
+                ? InkWell(
+              onTap: () {
+                CalendarSelector().nextDay();
+                onHeaderChanged.call();
+              },
+              child: Padding(
+                padding: EdgeInsets.only(right: 10),
+                child: Icon(
+                  Icons.arrow_forward_ios,
+                  color: Colors.white,
+                  size: 18,
+                ),
+              ),
+            )
+                : Container(),
           ],
         ),
       ),
