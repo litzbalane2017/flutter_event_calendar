@@ -1,5 +1,6 @@
 import 'package:flutter_event_calendar/src/handlers/EventCalendar.dart';
 import 'package:shamsi_date/shamsi_date.dart';
+
 import 'Translator.dart';
 
 class CalendarSelector {
@@ -163,13 +164,45 @@ class CalendarSelector {
 
   Map getGregorianDaysList() {
     Map days = {};
+    bool legacy = false;
     DateTime now = getSelectedGregorianDate();
     int monthLength = DateTime(now.year, now.month + 1, 0).day;
     DateTime firstDayOfMonth = DateTime(now.year, now.month, 1);
     int dayIndex = firstDayOfMonth.weekday;
-    for (var i = 1; i <= monthLength; i++) {
-      days[i] = Translator().getWeekDayNameWithIndex(dayIndex % 7);
-      dayIndex++;
+    if (legacy) {
+      for (var i = 1; i <= monthLength; i++) {
+        days[i] = Translator().getWeekDayNameWithIndex(dayIndex % 7);
+        dayIndex++;
+      }
+    } else {
+      int _currentMonth = int.parse(DateTime.now().month.toString());
+      int _lowerLimit = int.parse(DateTime.now().subtract(Duration(days: 4)).day.toString());
+      int _higherLimit = int.parse(DateTime.now().add(Duration(days: 6)).day.toString());
+      int _selectedDay = int.parse(EventCalendar.dateTime.split(" ")[0].toString().substring(8));
+      int _selectedMonth = int.parse(EventCalendar.dateTime.split(" ")[0].toString().substring(5, 7));
+      if (_currentMonth == _selectedMonth) {
+        int length = 4;
+        int start = DateTime.now().subtract(Duration(days: length)).day;
+        int dayIndex = DateTime.now().subtract(Duration(days: length)).weekday;
+        for (var i = start; i <= monthLength; i++) {
+          days[i] = Translator().getWeekDayNameWithIndex(dayIndex % 7);
+          dayIndex++;
+        }
+      } else if (_currentMonth < _selectedMonth) {
+        for (var i = 1; i <= monthLength; i++) {
+          if (i <= _higherLimit) {
+            days[i] = Translator().getWeekDayNameWithIndex(dayIndex % 7);
+            dayIndex++;
+          }
+        }
+      } else if (_currentMonth > _selectedMonth) {
+        for (var i = 1; i <= monthLength; i++) {
+          if (i >= monthLength - 4) {
+            days[i] = Translator().getWeekDayNameWithIndex(dayIndex % 7);
+            dayIndex++;
+          }
+        }
+      }
     }
     return days;
   }
