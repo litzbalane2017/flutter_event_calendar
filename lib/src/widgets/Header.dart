@@ -1,109 +1,67 @@
-import 'package:flutter/cupertino.dart';
+import 'package:fxpal/assets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_event_calendar/src/handlers/CalendarSelector.dart';
 import 'package:flutter_event_calendar/src/handlers/EventCalendar.dart';
+import 'package:flutter_event_calendar/src/widgets/Day.dart';
 
-class Header extends StatelessWidget {
-  Function onHeaderChanged;
+class Calendar extends StatelessWidget {
 
-  Header({this.onHeaderChanged});
+  Function onCalendarChanged;
+  var dayIndex;
+  ScrollController animatedTo;
+
+  Calendar({this.onCalendarChanged}) : super() {
+    dayIndex = CalendarSelector().getPart(format: 'day', responseType: 'int');
+  }
 
   @override
   Widget build(BuildContext context) {
-    int selectedDay = int.parse(EventCalendar.dateTime.split(" ")[0].toString().substring(8));
-    int selectedMonth = int.parse(EventCalendar.dateTime.split(" ")[0].toString().substring(5, 7));
-    int monthLength = DateTime(DateTime.now().year, DateTime.now().month + 1, 0).day;
-    if (higherLimit <= 6) higherLimit = monthLength;
+    int _length = CalendarSelector().getDays().length;
 
+    animatedTo = ScrollController(
+        initialScrollOffset:
+            (EventCalendar.headerWeekDayStringType == 'full' ? 100.0 : 52.0) *
+                (indexer - 1));
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      animatedTo.animateTo(
+          (EventCalendar.headerWeekDayStringType == 'full' ? 100.0 : 52.0) *
+              (indexer - 1),
+          duration: Duration(milliseconds: 700),
+          curve: Curves.decelerate);
+    });
+
+    // Yearly , Monthly , Weekly and Daily calendar
     return Container(
+      height: 100,
       child: Padding(
-        padding: EdgeInsets.only(
-          top: 15,
-        ),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        padding: EdgeInsets.only(top: 10),
+        child: Stack(
           children: [
-            lowerLimit < selectedDay || selectedMonth > currentMonth || (currentDay < 4 && selectedMonth == currentMonth) || (currentDay == 4 && selectedMonth == currentMonth) ?
-              InkWell(
-                  onTap: () {
-                    indexer--;
-                    CalendarSelector().previousDay();
-                    onHeaderChanged.call();
-                  },
-                  child: Padding(
-                    padding: EdgeInsets.only(left: 10),
-                    child: Icon(
-                      Icons.arrow_back_ios,
-                      color: Colors.white,
-                      size: 18,
-                    ),
-                  ),
-                ) : InkWell(
-              onTap: null,
-              child: Padding(
-                padding: EdgeInsets.only(left: 10),
-                child: Icon(
-                  Icons.arrow_back_ios,
-                  color: const Color(0xFF15222D),
-                  size: 18,
-                ),
-              ),
-            ),
             Row(
-              textDirection: EventCalendar.isRTL ? TextDirection.rtl : TextDirection.ltr,
               children: [
-                Container(
-                  child: Text(
-                    '${CalendarSelector().getPart(format: 'month', responseType: 'string')}',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.w500,
-                      fontSize: 20,
-                      fontFamily: EventCalendar.font,
-                    ),
+                Expanded(
+                  child: ListView(
+                    reverse: EventCalendar.isRTL,
+                    controller: animatedTo,
+                    scrollDirection: Axis.horizontal,
+                    children: daysMaker(),
                   ),
-                ),
+                )
               ],
             ),
-            higherLimit > selectedDay
-                ? InkWell(
-              onTap: () {
-                indexer++;
-                CalendarSelector().nextDay();
-                onHeaderChanged.call();
-              },
-              child: Padding(
-                padding: EdgeInsets.only(right: 10),
-                child: Icon(
-                  Icons.arrow_forward_ios,
-                  color: Colors.white,
-                  size: 18,
+            Align(
+              alignment: Alignment.centerLeft,
+              child: IgnorePointer(
+                child: Container(
+                  width: 70,
                 ),
               ),
-            ) : selectedMonth < currentMonth
-                ? InkWell(
-              onTap: () {
-                indexer++;
-                CalendarSelector().nextDay();
-                onHeaderChanged.call();
-              },
-              child: Padding(
-                padding: EdgeInsets.only(right: 10),
-                child: Icon(
-                  Icons.arrow_forward_ios,
-                  color: Colors.white,
-                  size: 18,
-                ),
-              ),
-            ) :  InkWell(
-              onTap: null,
-              child: Padding(
-                padding: EdgeInsets.only(right: 10),
-                child: Icon(
-                  Icons.arrow_forward_ios,
-                  color: const Color(0xFF15222D),
-                  size: 18,
+            ),
+            Align(
+              alignment: Alignment.centerLeft,
+              child: IgnorePointer(
+                child: Container(
+                  width: 70,
                 ),
               ),
             ),
@@ -111,5 +69,36 @@ class Header extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  List<Widget> daysMaker() {
+    List<Widget> days = [
+      Day(
+        index: 0,
+        weekDay: '',
+        selected: false,
+        onCalendarChanged: onCalendarChanged,
+      )
+    ];
+
+    int day = dayIndex;
+    CalendarSelector().getDays().forEach((index, weekDay) {
+      var selected = index == day ? true : false;
+      days.add(Day(
+        index: index,
+        weekDay: weekDay,
+        selected: selected,
+        onCalendarChanged: onCalendarChanged,
+      ));
+    });
+
+    days.add(Day(
+      index: 0,
+      weekDay: '',
+      selected: false,
+      onCalendarChanged: onCalendarChanged,
+    ));
+
+    return days;
   }
 }
