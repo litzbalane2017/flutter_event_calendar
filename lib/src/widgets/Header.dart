@@ -4,18 +4,17 @@ import 'package:flutter_event_calendar/src/handlers/CalendarSelector.dart';
 import 'package:flutter_event_calendar/src/handlers/EventCalendar.dart';
 
 class Header extends StatelessWidget {
-  int _currentMonth = int.parse(DateTime.now().month.toString());
-  int _lowerLimit = int.parse(DateTime.now().subtract(Duration(days: 4)).day.toString());
-  int _higherLimit = int.parse(DateTime.now().add(Duration(days: 6)).day.toString());
-  int _selectedDay = int.parse(EventCalendar.dateTime.split(" ")[0].toString().substring(8));
-  int _selectedMonth = int.parse(EventCalendar.dateTime.split(" ")[0].toString().substring(5, 7));
-
   Function onHeaderChanged;
 
   Header({this.onHeaderChanged});
 
   @override
   Widget build(BuildContext context) {
+    int selectedDay = int.parse(EventCalendar.dateTime.split(" ")[0].toString().substring(8));
+    int selectedMonth = int.parse(EventCalendar.dateTime.split(" ")[0].toString().substring(5, 7));
+    int monthLength = DateTime(DateTime.now().year, DateTime.now().month + 1, 0).day;
+    if (higherLimit <= 6) higherLimit = monthLength;
+
     return Container(
       child: Padding(
         padding: EdgeInsets.only(
@@ -25,22 +24,32 @@ class Header extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            _lowerLimit < _selectedDay || _selectedMonth > _currentMonth
-                ? InkWell(
-              onTap: () {
-                CalendarSelector().previousDay();
-                onHeaderChanged.call();
-              },
+            lowerLimit < selectedDay || selectedMonth > currentMonth || (currentDay < 4 && selectedMonth == currentMonth) || (currentDay == 4 && selectedMonth == currentMonth) ?
+              InkWell(
+                  onTap: () {
+                    indexer--;
+                    CalendarSelector().previousDay();
+                    onHeaderChanged.call();
+                  },
+                  child: Padding(
+                    padding: EdgeInsets.only(left: 10),
+                    child: Icon(
+                      Icons.arrow_back_ios,
+                      color: Colors.white,
+                      size: 18,
+                    ),
+                  ),
+                ) : InkWell(
+              onTap: null,
               child: Padding(
                 padding: EdgeInsets.only(left: 10),
                 child: Icon(
                   Icons.arrow_back_ios,
-                  color: Colors.white,
+                  color: const Color(0xFF15222D),
                   size: 18,
                 ),
               ),
-            )
-                : Container(),
+            ),
             Row(
               textDirection: EventCalendar.isRTL ? TextDirection.rtl : TextDirection.ltr,
               children: [
@@ -57,9 +66,10 @@ class Header extends StatelessWidget {
                 ),
               ],
             ),
-            _higherLimit > _selectedDay
+            higherLimit > selectedDay
                 ? InkWell(
               onTap: () {
+                indexer++;
                 CalendarSelector().nextDay();
                 onHeaderChanged.call();
               },
@@ -71,10 +81,10 @@ class Header extends StatelessWidget {
                   size: 18,
                 ),
               ),
-            )
-                : _selectedMonth <= _currentMonth
+            ) : selectedMonth < currentMonth
                 ? InkWell(
               onTap: () {
+                indexer++;
                 CalendarSelector().nextDay();
                 onHeaderChanged.call();
               },
@@ -86,8 +96,17 @@ class Header extends StatelessWidget {
                   size: 18,
                 ),
               ),
-            )
-                : Container(),
+            ) :  InkWell(
+              onTap: null,
+              child: Padding(
+                padding: EdgeInsets.only(right: 10),
+                child: Icon(
+                  Icons.arrow_forward_ios,
+                  color: const Color(0xFF15222D),
+                  size: 18,
+                ),
+              ),
+            ),
           ],
         ),
       ),
