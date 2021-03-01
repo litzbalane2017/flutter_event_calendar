@@ -7,18 +7,16 @@ import 'package:flutter_event_calendar/src/handlers/Translator.dart';
 import 'package:flutter_event_calendar/src/widgets/EventCard.dart';
 
 class Events extends StatelessWidget {
-  int _currentMonth = int.parse(DateTime.now().month.toString());
-  int _lowerLimit = int.parse(DateTime.now().subtract(Duration(days: 4)).day.toString());
-  int _higherLimit = int.parse(DateTime.now().add(Duration(days: 6)).day.toString());
-  int _selectedDay = int.parse(EventCalendar.dateTime.split(" ")[0].toString().substring(8));
-  int _selectedMonth = int.parse(EventCalendar.dateTime.split(" ")[0].toString().substring(5, 7));
-
   Function onEventsChanged;
 
   Events({this.onEventsChanged});
 
   @override
   Widget build(BuildContext context) {
+    int selectedDay = int.parse(EventCalendar.dateTime.split(" ")[0].toString().substring(8));
+    int selectedMonth = int.parse(EventCalendar.dateTime.split(" ")[0].toString().substring(5, 7));
+    int monthLength = DateTime(DateTime.now().year, DateTime.now().month + 1, 0).day;
+    if (higherLimit <= 6) higherLimit = monthLength;
 
     return Expanded(
       child: Padding(
@@ -36,7 +34,11 @@ class Events extends StatelessWidget {
                   CalendarSelector().nextDay();
                   break;
                 case false:
-                  if (_lowerLimit < _selectedDay || _selectedMonth > _currentMonth) CalendarSelector().previousDay();
+                  if (lowerLimit < selectedDay || selectedMonth > currentMonth || (currentDay < 4 && selectedMonth == currentMonth) ||
+                    (currentDay == 4 && selectedMonth == currentMonth))  {
+                    indexer--;
+                    CalendarSelector().previousDay();
+                  }
                   break;
               }
               onEventsChanged.call();
@@ -46,9 +48,11 @@ class Events extends StatelessWidget {
                   CalendarSelector().previousDay();
                   break;
                 case false:
-                  if (_higherLimit > _selectedDay) {
+                  if (higherLimit > selectedDay) {
+                    indexer++;
                     CalendarSelector().nextDay();
-                  } else if (_selectedMonth <= _currentMonth) {
+                  } else if (selectedMonth < currentMonth) {
+                    indexer++;
                     CalendarSelector().nextDay();
                   }
                   break;
