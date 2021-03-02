@@ -5,17 +5,17 @@ class Event {
   String title;
   String description;
   String dateTime;
+  String flag;
   Function onTap;
   Function onLongPress;
-  Widget flag;
 
   Event({
     title,
     description,
     dateTime,
+    flag,
     onTap(int listIndex),
     onLongPress,
-    flag
   }) {
     this.title = title ?? '';
     this.description = description ?? '';
