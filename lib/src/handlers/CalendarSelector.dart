@@ -4,7 +4,7 @@ import 'package:shamsi_date/shamsi_date.dart';
 import 'Translator.dart';
 
 int currentDay = DateTime.now().day;
-int indexer = currentDay == 1 ? 0 : currentDay == 2 ? 1 : 4;
+int indexer = currentDay == 1 ? 0 : currentDay == 2 ? 1 :currentDay == 3 ? 2 : 4;
 int currentMonth = int.parse(DateTime.now().month.toString());
 int lowerLimit = int.parse(DateTime.now().subtract(Duration(days: 4)).day.toString());
 int higherLimit = int.parse(DateTime.now().add(Duration(days: 6)).day.toString());
